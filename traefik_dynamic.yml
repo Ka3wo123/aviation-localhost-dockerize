@@ -1,0 +1,25 @@
+http:
+  routers:
+    react:
+      rule: "PathPrefix(`/`)"
+      service: react
+      entryPoints:
+        - web
+
+    micronaut:
+      rule: "PathPrefix(`/api`)"
+      service: micronaut
+      entryPoints:
+        - web
+
+  services:
+    react:
+      loadBalancer:
+        servers:
+          - url: "http://react:80"
+
+    micronaut:
+      loadBalancer:
+        servers:
+          - url: "http://micronaut:80"
+
