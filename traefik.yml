@@ -1,10 +1,24 @@
-api:
-  insecure: true
+log:
+  level: DEBUG
+
+ping:
+  entryPoint: metrics
+
+metrics:
+  prometheus:
+    entryPoint: metrics
 
 entryPoints:
   web:
-    address: ":80"
+    address: :3000
+    forwardedHeaders:
+      insecure: true
+    transport:
+      lifeCycle:
+        requestAcceptGraceTimeout: 10s
+  metrics:
+    address: :8080
 
 providers:
   file:
-    filename: "/etc/traefik/traefik_dynamic.yml"
+    filename: /etc/traefik/traefik_dynamic.yml

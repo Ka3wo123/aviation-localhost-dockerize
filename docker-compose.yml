@@ -2,27 +2,21 @@ services:
   micronaut:
     container_name: micronaut
     build:
-      context: "/home/ka3wo/aviation-thesis/aviation-backend/aviation-backend/"
+      context: /home/ka3wo/aviation-thesis/aviation-backend/aviation-backend/
 
   react:
     container_name: react
     build:
-      context: "/home/ka3wo/aviation-thesis/aviation-webapp/"
+      context: /home/ka3wo/aviation-thesis/aviation-webapp/
     depends_on:
       - micronaut
 
   traefik:
     container_name: traefik
-    image: traefik:v2.10
+    image: traefik:2.11.8
     ports:
-      - "80:80"
-      - "8080:8080"
-    networks:
-      - webnet
+      - 3000:3000
+      - 8080:8080
     volumes:
-      - "./traefik.yml:/etc/traefik/traefik.yml"
-      - "./traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml"
-
-networks:
-  webnet:
-    driver: bridge
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml
