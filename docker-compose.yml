@@ -1,8 +1,28 @@
 services:
+  mongo:
+    image: mongo:7.0.14
+    container_name: mongo
+    ports:
+      - 27017:27017    
+    environment:
+      MONGO_INITDB_DATABASE: aviationDb
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./01-mongo.js:/docker-entrypoint-initdb.d/01-mongo.js:ro
+    networks:
+      - aviation
+    
   micronaut:
     container_name: micronaut
     build:
-      context: /home/ka3wo/aviation-thesis/aviation-backend/aviation-backend/
+      context: /home/ka3wo/aviation-thesis/aviation-backend/
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_HOST=mongo
+    networks:
+      - aviation
 
   react:
     container_name: react
@@ -10,6 +30,8 @@ services:
       context: /home/ka3wo/aviation-thesis/aviation-webapp/
     depends_on:
       - micronaut
+    networks:
+      - aviation
 
   traefik:
     container_name: traefik
@@ -20,3 +42,9 @@ services:
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml
       - ./traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml
+    networks:
+      - aviation
+
+networks:
+  aviation:
+    external: true
