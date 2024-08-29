@@ -13,25 +13,17 @@ services:
     networks:
       - aviation
     
-  micronaut:
-    container_name: micronaut
-    build:
-      context: /home/ka3wo/aviation-thesis/aviation-backend/
-    depends_on:
-      - mongo
-    environment:
-      - MONGO_HOST=mongo
-    networks:
-      - aviation
-
   react:
     container_name: react
     build:
       context: /home/ka3wo/aviation-thesis/aviation-webapp/
-    depends_on:
-      - micronaut
     networks:
       - aviation
+  
+  consul:
+    image: consul:1.15.4
+    ports:
+      - 8500:8500
 
   traefik:
     container_name: traefik

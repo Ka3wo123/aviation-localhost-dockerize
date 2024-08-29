@@ -1,17 +1,17 @@
 http:
   routers:
-    micronaut:
+    consul:
       rule: PathPrefix(`/api`)
-      service: micronaut
+      service: consul
     react:
       rule: PathPrefix(`/`)
       service: react
 
   services:
-    micronaut:
+    eureka:
       loadBalancer:
         servers:
-          - url: http://micronaut:3001
+          - url: http://consul:8500
     react:
       loadBalancer:
         servers:
