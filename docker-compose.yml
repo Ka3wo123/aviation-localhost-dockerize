@@ -8,8 +8,9 @@ services:
       MONGO_INITDB_DATABASE: aviationDb
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+    restart: unless-stopped
     volumes:
-      - ./01-mongo.js:/docker-entrypoint-initdb.d/01-mongo.js:ro
+      - ./01-init.js:/docker-entrypoint-initdb.d/01-init.js:ro
     networks:
       - aviation
     
@@ -19,11 +20,33 @@ services:
       context: /home/ka3wo/aviation-thesis/aviation-webapp/
     networks:
       - aviation
+    depends_on:
+      - consul
   
   consul:
     image: consul:1.15.4
-    ports:
-      - 8500:8500
+    networks:
+      - aviation
+    depends_on:
+      - mongo
+
+  user-service:
+    container_name: user-service-api
+    build: 
+      context: /home/ka3wo/aviation-thesis/aviation-backend/userservice/
+    networks:
+      - aviation
+    depends_on:
+      - consul
+
+  flight-service:
+    container_name: user-flight-api
+    build: 
+      context: /home/ka3wo/aviation-thesis/aviation-backend/flightservice/
+    networks:
+      - aviation
+    depends_on:
+      - consul
 
   traefik:
     container_name: traefik
