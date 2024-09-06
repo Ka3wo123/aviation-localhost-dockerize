@@ -3,7 +3,7 @@ services:
     image: mongo:7.0.14
     container_name: mongo
     ports:
-      - 27017:27017    
+      - 27017:27017
     environment:
       MONGO_INITDB_DATABASE: aviationDb
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -13,7 +13,19 @@ services:
       - ./01-init.js:/docker-entrypoint-initdb.d/01-init.js:ro
     networks:
       - aviation
-    
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    restart: unless-stopped
+    environment:
+      - MARIADB_DATABASE=userDb
+      - MARIADB_ROOT_PASSWORD=password
+    ports:
+      - 3306:3306
+    networks:
+      - aviation
+
   react:
     container_name: react
     build:
@@ -22,7 +34,7 @@ services:
       - aviation
     depends_on:
       - consul
-  
+
   consul:
     image: consul:1.15.4
     networks:
@@ -30,18 +42,19 @@ services:
     depends_on:
       - mongo
 
-  user-service:
+  user-service-api:
     container_name: user-service-api
-    build: 
+    build:
       context: /home/ka3wo/aviation-thesis/aviation-backend/userservice/
     networks:
       - aviation
     depends_on:
       - consul
+      - mariadb
 
-  flight-service:
+  flight-service-api:
     container_name: user-flight-api
-    build: 
+    build:
       context: /home/ka3wo/aviation-thesis/aviation-backend/flightservice/
     networks:
       - aviation

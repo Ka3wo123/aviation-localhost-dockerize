@@ -1,18 +1,40 @@
 http:
   routers:
-    consul:
-      rule: PathPrefix(`/api`)
-      service: consul
-    react:
-      rule: PathPrefix(`/`)
-      service: react
+    consul-router:
+        rule: "PathPrefix(`/api/consul/`)"
+        service: consul-service
+        
+    userservice-router:
+      rule: "PathPrefix(`/api/userservice/`)"
+      service: userservice-service
+
+    flightservice-router:
+      rule: "PathPrefix(`/api/flightservice/`)"
+      service: flightservice-service
+
+    react-router:
+      rule: "PathPrefix(`/`)"
+      service: react-service
+    
+    
 
   services:
-    eureka:
+    userservice-service:
       loadBalancer:
         servers:
-          - url: http://consul:8500
-    react:
+          - url: "http://user-service-api:8082"
+
+    flightservice-service:
       loadBalancer:
         servers:
-          - url: http://react:3002
+          - url: "http://flight-service-api:8081"
+
+    react-service:
+      loadBalancer:
+        servers:
+          - url: "http://react:3002"
+
+    consul-service:
+      loadBalancer:
+        servers:
+          - url: "http://consul:8500"
