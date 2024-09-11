@@ -5,12 +5,16 @@ http:
         service: consul-service
         
     userservice-router:
-      rule: "PathPrefix(`/api/userservice/`)"
-      service: userservice-service
+      rule: "PathPrefix(`/api/user/`)"
+      service: user-service
 
     flightservice-router:
-      rule: "PathPrefix(`/api/flightservice/`)"
-      service: flightservice-service
+      rule: "PathPrefix(`/api/flight/`)"
+      service: flight-service
+    
+    authservice-router:
+      rule: "PathPrefix(`/api/auth/`)"
+      service: auth-service
 
     react-router:
       rule: "PathPrefix(`/`)"
@@ -19,15 +23,21 @@ http:
     
 
   services:
-    userservice-service:
+    flight-service:
+      loadBalancer:
+        servers:
+          - url: "http://flight-service-api:8081"
+          
+    user-service:
       loadBalancer:
         servers:
           - url: "http://user-service-api:8082"
 
-    flightservice-service:
+
+    auth-service:
       loadBalancer:
         servers:
-          - url: "http://flight-service-api:8081"
+          - url: "http://auth-service-api:8083"
 
     react-service:
       loadBalancer:
@@ -38,3 +48,4 @@ http:
       loadBalancer:
         servers:
           - url: "http://consul:8500"
+          

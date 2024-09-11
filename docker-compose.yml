@@ -16,13 +16,19 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: mariadb
+    image: mariadb:11.2
     restart: unless-stopped
     environment:
       - MARIADB_DATABASE=userDb
       - MARIADB_ROOT_PASSWORD=password
     ports:
       - 3306:3306
+    networks:
+      - aviation
+
+  redis:
+    container_name: redis
+    image: redis
     networks:
       - aviation
 
@@ -51,6 +57,10 @@ services:
     depends_on:
       - consul
       - mariadb
+      - auth-service-api
+    environment:
+      - DB_HOST=mariadb                        
+      - CONSUL_HOST=consul      
 
   flight-service-api:
     container_name: user-flight-api
@@ -60,6 +70,19 @@ services:
       - aviation
     depends_on:
       - consul
+    environment:
+      - CONSUL_HOST=consul
+  
+  auth-service-api:
+    container_name: auth-service-api
+    build:
+      context: /home/ka3wo/aviation-thesis/aviation-backend/authservice/
+    networks:
+      - aviation
+    environment:
+      - REDIS_HOST=redis
+      - CONSUL_HOST=consul
+  
 
   traefik:
     container_name: traefik

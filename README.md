@@ -14,18 +14,16 @@ Hit http://localhost:3000/ to see frontend app.
 ## Technologies on frontend
 - React 18.3.1
 - Yarn 1.22.22
-- Nginx (container alpine)
+- Nginx alpine
 - Node 20.17.0
 
-## PaaS
+## DevOps
 - Docker 27.2.0
-
-## Network traffik
 - Traefik 2.11.8
 
 ## Databases
-- MariaDB
+- MariaDB 11.2
 - MongoDB 7.0.14
-- Redis
+- Redis 
 
 
