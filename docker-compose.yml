@@ -24,7 +24,6 @@ services:
     networks:
       - aviation
   
-
   react:
     container_name: react
     build:
@@ -40,6 +39,8 @@ services:
       - aviation
     depends_on:
       - mongo
+    ports:
+      - 8500:8500
 
   user-service-api:
     container_name: user-service-api
@@ -48,23 +49,28 @@ services:
     networks:
       - aviation
     depends_on:
-      - consul
-      - mariadb
-      - auth-service-api
+      - consul          
     environment:
-      - DB_HOST=mariadb                        
-      - CONSUL_HOST=consul      
+      - DB_HOST=mariadb
+      - DB_PORT=3306                     
+      - CONSUL_HOST=consul     
+    ports:
+      - 8082:8082 
 
   flight-service-api:
-    container_name: user-flight-api
+    container_name: flight-service-api
     build:
       context: /home/ka3wo/aviation-thesis/aviation-backend/flightservice/
     networks:
       - aviation
-    depends_on:
+    depends_on:      
       - consul
     environment:
       - CONSUL_HOST=consul
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+    ports:
+      - 8084:8084
   
   auth-service-api:
     container_name: auth-service-api
@@ -74,8 +80,11 @@ services:
       - aviation
     environment:      
       - CONSUL_HOST=consul
+    depends_on:
+      - consul
+    ports:
+      - 8083:8083
   
-
   traefik:
     container_name: traefik
     image: traefik:2.11.8

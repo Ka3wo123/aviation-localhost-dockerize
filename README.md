@@ -2,7 +2,9 @@
 
 ### How to launch
 1. Run `docker network create aviation`
-2. Run `docker-compose up -d`
+2. Run `docker volume create flight-data`
+3. Run `docker volume create user-data`
+4. Run `docker-compose up -d`
 
 Hit http://localhost:3000/ to see frontend app.
 
