@@ -29,3 +29,5 @@ Hit http://localhost:3000/ to see frontend app.
 - Redis 
 
 
+TODO: przy odpalaniu kontenerów należy załadować bazę lotniskami lotami itd z flightservice/aviation-data-mongo
+
